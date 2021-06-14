@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -e
+export PATH=/bin:/usr/bin:/usr/local/bin
+
+APPS_NAME=$1
+SOURCE=$2
+TARGET=$3
+BACKUP_RETAIN_DAYS=30
+
+
+TODAY=`date +"%d%b%Y"`
+function backup () {
+  mkdir -p ${TARGET}/${TODAY}
+  tar -zvcf ${TARGET}/${TODAY}/${APPS_NAME}.tar.gz ${SOURCE}
+}
+
+#### backup started
+echo "Backup started -"; backup
+if [ $? -eq 0 ]; then
+  echo "code backup successfully completed"
+else
+  echo "Error found during backup"
+fi
+ 
+ 
+##### Remove backups older than {BACKUP_RETAIN_DAYS} days  #####
+DBDELDATE=`date +"%d%b%Y" --date="${BACKUP_RETAIN_DAYS} days ago"`
+if [ ! -z ${TARGET} ]; then
+  cd ${TARGET}
+  if [ ! -z ${DBDELDATE} ] && [ -d ${DBDELDATE} ]; then
+    rm -rf ${DBDELDATE}
+  fi
+fi
+ 
+### End of script ####
