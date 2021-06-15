@@ -5,8 +5,11 @@ export PATH=/bin:/usr/bin:/usr/local/bin
 APPS_NAME=$1
 SOURCE=$2
 TARGET=$3
-BACKUP_RETAIN_DAYS=30
+BACKUP_RETAIN_DAYS=$4
 
+if [ -z $BACKUP_RETAIN_DAYS ]; then
+  BACKUP_RETAIN_DAYS=$4
+fi
 
 TODAY=`date +"%d%b%Y"`
 function backup () {
